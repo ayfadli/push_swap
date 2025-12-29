@@ -1,68 +1,91 @@
-#include "push_swap.h"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayfadli <ayfadli@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/27 18:29:11 by ayfadli           #+#    #+#             */
+/*   Updated: 2025/12/29 17:47:01 by ayfadli          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int check_args(char *arg)
+#include "push_swap.h"
+
+static void	parse_args(t_stack *stack, char *args, t_stack *stack_b)
 {
-	while(*arg)
+	char	**data;
+	int		i;
+
+	data = ft_split(args, ' ');
+	if (!data || !*data)
+		error_exit(stack, NULL, args, stack_b);
+	i = 0;
+	while (data[i])
 	{
-		if (!ft_strchr("0123456789 -", *arg))
-			return (0);
-		arg++;
+		if (!is_valid_input(data[i]))
+			error_exit(stack, data, args, stack_b);
+		i++;
 	}
-	return (1);
+	stack->size = i;
+	stack->data = fill_from_split(data, i);
+	if (!stack->data)
+		error_exit(stack, data, args, stack_b);
+	free_split(data);
 }
 
-int	*char_to_int(char **data, t_stack *stack)
+static void	check_duplicates(t_stack *stack, char *args, t_stack *stack_b)
 {
-	int		w;
-	int 	*numbers;
+	int	i;
+	int	j;
 
-	w = 0;
-	stack->size = w;
-	numbers = malloc(sizeof(int) * w);
-	if (!numbers)
-		return (NULL);
-	w = 0;
-	while(data[w])
+	i = 0;
+	while (i < stack->size)
 	{
-		numbers[w] = ft_atoi(data[w]);
-		w++;
+		j = i + 1;
+		while (j < stack->size)
+		{
+			if (stack->data[i] == stack->data[j])
+				error_exit(stack, NULL, args, stack_b);
+			j++;
+		}
+		i++;
 	}
-	return (numbers);
+}
+void	free_stacks(t_stack *stack_a, t_stack *stack_b)
+{
+	if (stack_a)
+	{
+		free(stack_a->data);
+		free(stack_a);
+	}
+	if (stack_b)
+	{
+		free(stack_b->data);
+		free(stack_b);
+	}
 }
 
 int	main(int ac, char **av)
 {
-	char	**data;
-	t_stack *stack_a;
-	int 	index;
+	t_stack	*stack_a;
+	t_stack	*stack_b;
+	char	*args;
 
-	index = 1;
+	if (ac < 2)
+		return (1);
 	stack_a = malloc(sizeof(t_stack));
-	if (!stack_a)
-		return (1);
-	data = NULL;
-	if (ac == 1)
-		return (1);
-	if (ac == 2)
-	{
-		if (!check_args(av[1]))
-			return (write(1,"ERROR",5), 1);
-		data = ft_split(av[1], ' ');
-		stack_a->data = char_to_int(data, stack_a);
-	}
-	else
-	{
-		stack_a->size = ac - 1;
-		while(index < ac)
-		{
-			if (!check_args(av[index]))
-				return (write(1,"ERROR",5), 1);
-			printf("%d\n", stack_a->data[index - 1]);
-			stack_a->data[index - 1] = ft_atoi(av[index]);
-			index++;
-		}
-	}
-	free(data);
-	return(0);
+	stack_b = malloc(sizeof(t_stack));
+	if (!stack_a || !stack_b)
+		error_exit(stack_a, NULL, NULL, stack_b);
+	args = join_args(ac, av, stack_a, stack_b);
+	if (!args)
+		error_exit(stack_a, NULL, NULL, stack_b);
+	parse_args(stack_a, args, stack_b);
+	check_duplicates(stack_a, args, stack_b);
+	if (is_sorted(stack_a))
+		return (free_stacks(stack_a, stack_b), free(args), 0);
+	index_stack(stack_a);
+	sort_to_b(stack_a, stack_b);
+	return (free_stacks(stack_a, stack_b), free(args), 0);
 }
