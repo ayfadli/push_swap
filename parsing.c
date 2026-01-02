@@ -74,7 +74,10 @@ char	*join_args(int ac, char **av, t_stack *stack, t_stack *stack_b)
 	while (i < ac)
 	{
 		args = free_and_join(args, av[i++], stack, stack_b);
+		if (!args)
+			error_exit(stack, NULL, NULL, stack_b);
 		args = free_and_join(args, " ", stack, stack_b);
+
 	}
 	return (args);
 }

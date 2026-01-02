@@ -70,6 +70,8 @@ char	*free_and_join(char *s1, char *s2, t_stack *stack, t_stack *stack_b)
 
 	tmp = s1;
 	tmp = ft_strjoin((const char *)tmp, (const char *)s2);
+	if (!tmp)
+		return (NULL);
 	free(s1);
 	if (!tmp)
 		error_exit(stack, NULL, NULL, stack_b);

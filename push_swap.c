@@ -12,25 +12,25 @@
 
 #include "push_swap.h"
 
-static void	parse_args(t_stack *stack, char *args, t_stack *stack_b)
+static void	parse_args(t_stack *stack_a, char *args, t_stack *stack_b)
 {
 	char	**data;
 	int		i;
 
 	data = ft_split(args, ' ');
 	if (!data || !*data)
-		error_exit(stack, NULL, args, stack_b);
+		error_exit(stack_a, NULL, args, stack_b);
 	i = 0;
 	while (data[i])
 	{
 		if (!is_valid_input(data[i]))
-			error_exit(stack, data, args, stack_b);
+			error_exit(stack_a, data, args, stack_b);
 		i++;
 	}
-	stack->size = i;
-	stack->data = fill_from_split(data, i);
-	if (!stack->data)
-		error_exit(stack, data, args, stack_b);
+	stack_a->size = i;
+	stack_a->data = fill_from_split(data, i);
+	if (!stack_a->data)
+		error_exit(stack_a, data, args, stack_b);
 	free_split(data);
 }
 
@@ -52,6 +52,7 @@ static void	check_duplicates(t_stack *stack, char *args, t_stack *stack_b)
 		i++;
 	}
 }
+
 void	free_stacks(t_stack *stack_a, t_stack *stack_b)
 {
 	if (stack_a)
