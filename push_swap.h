@@ -6,7 +6,7 @@
 /*   By: ayfadli <ayfadli@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 14:01:21 by ayfadli           #+#    #+#             */
-/*   Updated: 2025/12/29 17:39:55 by ayfadli          ###   ########.fr       */
+/*   Updated: 2026/01/03 10:30:39 by ayfadli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,8 @@ void		pb(t_stack *stack_a, t_stack *stack_b);
 
 void		index_stack(t_stack *stack);
 void		sort_to_b(t_stack *stack_a, t_stack *stack_b);
+
+void		sort_three(t_stack *stack);
+void		sort_five(t_stack *stack_a, t_stack *stack_b);
 
 #endif

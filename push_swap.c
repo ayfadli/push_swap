@@ -6,31 +6,31 @@
 /*   By: ayfadli <ayfadli@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/27 18:29:11 by ayfadli           #+#    #+#             */
-/*   Updated: 2025/12/29 17:47:01 by ayfadli          ###   ########.fr       */
+/*   Updated: 2026/01/03 09:00:51 by ayfadli          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-static void	parse_args(t_stack *stack, char *args, t_stack *stack_b)
+static void	parse_args(t_stack *stack_a, char *args, t_stack *stack_b)
 {
 	char	**data;
 	int		i;
 
 	data = ft_split(args, ' ');
 	if (!data || !*data)
-		error_exit(stack, NULL, args, stack_b);
+		error_exit(stack_a, NULL, args, stack_b);
 	i = 0;
 	while (data[i])
 	{
 		if (!is_valid_input(data[i]))
-			error_exit(stack, data, args, stack_b);
+			error_exit(stack_a, data, args, stack_b);
 		i++;
 	}
-	stack->size = i;
-	stack->data = fill_from_split(data, i);
-	if (!stack->data)
-		error_exit(stack, data, args, stack_b);
+	stack_a->size = i;
+	stack_a->data = fill_from_split(data, i);
+	if (!stack_a->data)
+		error_exit(stack_a, data, args, stack_b);
 	free_split(data);
 }
 
@@ -52,6 +52,7 @@ static void	check_duplicates(t_stack *stack, char *args, t_stack *stack_b)
 		i++;
 	}
 }
+
 void	free_stacks(t_stack *stack_a, t_stack *stack_b)
 {
 	if (stack_a)
@@ -84,8 +85,8 @@ int	main(int ac, char **av)
 	parse_args(stack_a, args, stack_b);
 	check_duplicates(stack_a, args, stack_b);
 	if (is_sorted(stack_a))
-		return (free_stacks(stack_a, stack_b), free(args), 0);
+		return (free_stacks(stack_a, stack_b), free(args), 1);
 	index_stack(stack_a);
 	sort_to_b(stack_a, stack_b);
-	return (free_stacks(stack_a, stack_b), free(args), 0);
+	return (free_stacks(stack_a, stack_b), free(args), 1);
 }
